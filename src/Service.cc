@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Service.h"
+#include "Xaction.h"
 
 // create the adapter and register with libecap to reach the host application
 static const bool Registered =
@@ -28,8 +29,8 @@ libesi::Service::describe(std::ostream &os) const
 }
 
 libecap::adapter::Service::MadeXactionPointer
-libesi::Service::makeXaction(libecap::host::Xaction *)
+libesi::Service::makeXaction(libecap::host::Xaction *hostx)
 {
     std::cerr << "libesi::Service::makeXaction called" << std::endl;
-    return libecap::adapter::Service::MadeXactionPointer();
+    return libecap::adapter::Service::MadeXactionPointer(new libesi::Xaction(hostx));
 }
