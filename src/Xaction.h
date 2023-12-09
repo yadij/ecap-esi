@@ -17,19 +17,20 @@ public:
     /* libecap::adapter::Xaction API */
     virtual void start() override;
     virtual void stop() override;
-// adapted body transmission control
-//    virtual void abDiscard() { noBodySupport(); }
-//    virtual void abMake() { noBodySupport(); }
-//    virtual void abMakeMore() { noBodySupport(); }
-//    virtual void abStopMaking() { noBodySupport(); }
-// adapted body content extraction and consumption
-//    virtual libecap::Area abContent(libecap::size_type, libecap::size_type) { noBodySupport(); return libecap::Area(); }
-//    virtual void abContentShift(libecap::size_type)  { noBodySupport(); }
-// virgin body state notification
-//    virtual void noteVbContentDone(bool) { noBodySupport(); }
-//    virtual void noteVbContentAvailable() { noBodySupport(); }
+    virtual const libecap::Area option(const libecap::Name &name) const override;
+    virtual void visitEachOption(libecap::NamedValueVisitor &visitor) const override;
+    virtual void abDiscard() override { noBodySupport(); }
+    virtual void abMake() override { noBodySupport(); }
+    virtual void abMakeMore() override { noBodySupport(); }
+    virtual void abStopMaking() override { noBodySupport(); }
+    virtual libecap::Area abContent(libecap::size_type, libecap::size_type) override { noBodySupport(); return libecap::Area(); }
+    virtual void abContentShift(libecap::size_type)  override { noBodySupport(); }
+    virtual void noteVbContentDone(bool) override { noBodySupport(); }
+    virtual void noteVbContentAvailable() override { noBodySupport(); }
 
 private:
+    void noBodySupport() const;
+
     std::unique_ptr<libecap::host::Xaction> hostx;
 };
 
