@@ -8,25 +8,25 @@
 #include <libecap/common/names.h>
 #include <libecap/common/registry.h>
 #include <libecap/host/host.h>
-#include "Xaction.h"
+#include "RespmodXaction.h"
 
-libesi::Xaction::Xaction(libecap::host::Xaction *h) :
+libesi::RespmodXaction::RespmodXaction(libecap::host::Xaction *h) :
     hostx(h)
 {
-    std::cerr << "libesi::Xaction construct this=" << (void*)this << " host=" << (void*)hostx.get() << std::endl;
+    std::cerr << "libesi::RespmodXaction construct this=" << (void*)this << " host=" << (void*)hostx.get() << std::endl;
 }
 
-libesi::Xaction::~Xaction()
+libesi::RespmodXaction::~RespmodXaction()
 {
-    std::cerr << "libesi::Xaction destruct this=" << (void*)this << std::endl;
+    std::cerr << "libesi::RespmodXaction destruct this=" << (void*)this << std::endl;
     if (auto x = hostx.release())
         x->adaptationAborted();
 }
 
 void
-libesi::Xaction::start()
+libesi::RespmodXaction::start()
 {
-    std::cerr << "libesi::Xaction start this=" << (void*)this << std::endl;
+    std::cerr << "libesi::RespmodXaction start this=" << (void*)this << std::endl;
 
     auto adapted = hostx->virgin().clone();
 
@@ -39,21 +39,27 @@ libesi::Xaction::start()
 }
 
 void
-libesi::Xaction::stop()
+libesi::RespmodXaction::stop()
 {
-    std::cerr << "libesi::Xaction stop this=" << (void*)this << std::endl;
+    std::cerr << "libesi::RespmodXaction stop this=" << (void*)this << std::endl;
     (void)hostx.release(); // caller will delete
 }
 
-const libecap::Area libesi::Xaction::option(const libecap::Name &) const {
+const libecap::Area
+libesi::RespmodXaction::option(const libecap::Name &) const
+{
     return libecap::Area(); // this transaction has no meta-information
 }
 
-void libesi::Xaction::visitEachOption(libecap::NamedValueVisitor &) const {
+void
+libesi::RespmodXaction::visitEachOption(libecap::NamedValueVisitor &) const
+{
     // this transaction has no meta-information to pass to the visitor
 }
 
-void libesi::Xaction::noBodySupport() const {
+void
+libesi::RespmodXaction::noBodySupport() const
+{
     Must(!"must not be called: minimal adapter offers no body support");
     // not reached
 }

@@ -12,7 +12,8 @@ configure_file("src/config.h.in" "src/config.h")
 ## Shared library module
 add_library(ecap-esi MODULE
     src/Service.cc
-    src/Xaction.cc
+    src/ReqmodXaction.cc
+    src/RespmodXaction.cc
 )
 set_target_properties(ecap-esi PROPERTIES
     CXX_STANDARD 17

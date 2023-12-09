@@ -1,5 +1,8 @@
 loadable_modules lib@PROJECT_NAME@.so
 ecap_enable on
 
-ecap_service esi respmod_precache ecap://@PROJECT_NAME@/@PROJECT_VERSION@/respmod bypass=off
+ecap_service surrogate reqmod_precache ecap://@PROJECT_NAME@/@PROJECT_VERSION@/surrogate
+adaptation_access surrogate allow all
+
+ecap_service esi respmod_precache ecap://@PROJECT_NAME@/@PROJECT_VERSION@/esi bypass=off
 adaptation_access esi allow all
