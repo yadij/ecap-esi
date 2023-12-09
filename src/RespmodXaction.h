@@ -8,6 +8,12 @@
 namespace libesi
 {
 
+/*
+ * Translate ESI response payload in HTTP Response
+ *
+ * See ESI Language Specification 1.0
+ * https://www.w3.org/TR/esi-lang/
+ */
 class RespmodXaction: public libecap::adapter::Xaction
 {
 public:
@@ -32,6 +38,7 @@ private:
     void noBodySupport() const;
 
     std::unique_ptr<libecap::host::Xaction> hostx;
+    bool hasEsiContent = false;
 };
 
 } // namespace libesi

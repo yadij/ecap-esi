@@ -5,6 +5,7 @@
 #include <libecap/common/errors.h>
 #include <libecap/common/header.h>
 #include <libecap/common/message.h>
+#include <libecap/common/named_values.h>
 #include <libecap/common/names.h>
 #include <libecap/common/registry.h>
 #include <libecap/host/host.h>
@@ -12,21 +13,42 @@
 
 libesi::RespmodXaction::RespmodXaction(libecap::host::Xaction *h) :
     hostx(h)
-{
-    std::cerr << "libesi::RespmodXaction construct this=" << (void*)this << " host=" << (void*)hostx.get() << std::endl;
-}
+{}
 
 libesi::RespmodXaction::~RespmodXaction()
 {
-    std::cerr << "libesi::RespmodXaction destruct this=" << (void*)this << std::endl;
     if (auto x = hostx.release())
         x->adaptationAborted();
 }
 
+class HeaderCheck : public libecap::NamedValueVisitor
+{
+public:
+    HeaderCheck(bool *x) : hasEsiContent(x) {}
+    virtual ~HeaderCheck() {}
+
+    void visit(const libecap::Name &name, const libecap::Area &value) override {
+        if (name == "Surrogate-Control") {
+            static const libecap::Area contentEsi("content=\"ESI/1.0\"", 18);
+            *hasEsiContent |= (value == contentEsi);
+        }
+    }
+private:
+    bool *hasEsiContent = nullptr;
+};
+
 void
 libesi::RespmodXaction::start()
 {
-    std::cerr << "libesi::RespmodXaction start this=" << (void*)this << std::endl;
+    // check whether the response has ESI content
+    {
+        HeaderCheck walker(&hasEsiContent);
+        hostx->virgin().header().visitEach(walker);
+        if (!hasEsiContent) {
+            hostx->useVirgin();
+            return;
+        }
+    }
 
     auto adapted = hostx->virgin().clone();
 
@@ -41,7 +63,6 @@ libesi::RespmodXaction::start()
 void
 libesi::RespmodXaction::stop()
 {
-    std::cerr << "libesi::RespmodXaction stop this=" << (void*)this << std::endl;
     (void)hostx.release(); // caller will delete
 }
 
