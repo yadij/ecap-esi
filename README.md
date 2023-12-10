@@ -3,12 +3,13 @@
 
 ## REQMOD adaptation service
 
-From version 0.0.1 this library provides a REQMOD service
- `ecap://@PROJECT_NAME@/@PROJECT_VERSION@/surrogate` which adds
+This library provides a REQMOD service
+ `ecap://ecap-esi/0.0.1/surrogate` which adds
  `Surrogate-Capability: "ESI/1.0"` headers on server traffic.
 
 This service is enabled by default in the provided
-`ecap-esi.conf` file.
+Squid configuration file `ecap-esi.conf`.
+
 
 # Compile and Build
 
